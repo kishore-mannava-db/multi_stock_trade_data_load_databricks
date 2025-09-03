@@ -1,0 +1,21 @@
+# Requirements for Databricks Asset Bundle Deployment
+# Install these packages to deploy and manage the bundle
+
+# Databricks CLI for bundle management
+databricks-cli>=0.200.0
+
+# YAML support for configuration files
+PyYAML>=6.0
+
+# Path handling utilities
+pathlib2>=2.3.7; python_version < "3.4"
+
+# Additional utilities for deployment
+requests>=2.28.0
+click>=8.0.0
+
+# Development and testing dependencies
+pytest>=7.0.0
+pytest-cov>=4.0.0
+black>=22.0.0
+flake8>=5.0.0

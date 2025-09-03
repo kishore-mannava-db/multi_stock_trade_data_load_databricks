@@ -1,0 +1,44 @@
+bundle:
+  name: trade-data-generator
+
+targets:
+  dev:
+    default: true
+    workspace:
+      host: https://adb-2018611342634356.16.azuredatabricks.net
+
+  prod:
+    workspace:
+      host: https://your-prod-workspace.cloud.databricks.com
+
+resources:
+  jobs:
+    trade-data-generator-job:
+      name: Trade Data Generator Job
+      tasks:
+        - task_key: generate_trade_data
+          description: Generate incremental trade data for all exchanges
+          notebook_task:
+            notebook_path: ./src/trade_data_generator.py
+            base_parameters:
+              rows_per_exchange: "500"
+              exchange_filter: "all"
+              data_type: "both"
+          timeout_seconds: 3600
+      
+      schedule:
+        quartz_cron_expression: "0 0 * * * ?"
+        timezone_id: "UTC"
+
+  pipelines:
+    lakeflow_trade_pipeline:
+      name: Configuration-Driven Trade Data Pipeline with Auto Loader & AutoCDC
+      libraries:
+        - notebook:
+            path: ./src/dlt_trade_pipeline.py
+      catalog: kishoremannava
+      schema: default
+      photon: true
+      serverless: true
+      development: true
+      channel: CURRENT
